@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./App.css";
 import BasicDetails from "./component/BasicDetails";
 import Stepper from "@mui/material/Stepper";
@@ -7,8 +7,12 @@ import StepLabel from "@mui/material/StepLabel";
 import DocumentSection from "./component/DocumentSection";
 import StatementPurpose from "./component/StatementPurpose";
 import InterviewAbilitySection from "./component/InterviewAbilitySection";
+import formContext from "./Context/FormContext";
+
+
 
 function App() {
+  const { currentStep, userData, finalData } = useContext(formContext);
   function showSteps(step) {
     switch (step) {
       case 1:
@@ -22,25 +26,27 @@ function App() {
     }
   }
   return (
-    <div>
-      <div className="center-stepper">
-        <Stepper activeStep={1} orientation={"horizontal"}>
-          <Step>
-            <StepLabel></StepLabel>
-          </Step>
-          <Step>
-            <StepLabel></StepLabel>
-          </Step>
-          <Step>
-            <StepLabel></StepLabel>
-          </Step>
-          <Step>
-            <StepLabel></StepLabel>
-          </Step>
-        </Stepper>
+      <div className="flex justify-center items-center">
+        <div className="w-[50%]">
+          <div className="center-stepper">
+            <Stepper activeStep={currentStep - 1} orientation={"horizontal"}>
+              <Step>
+                <StepLabel></StepLabel>
+              </Step>
+              <Step>
+                <StepLabel></StepLabel>
+              </Step>
+              <Step>
+                <StepLabel></StepLabel>
+              </Step>
+              <Step>
+                <StepLabel></StepLabel>
+              </Step>
+            </Stepper>
+          </div>
+          {showSteps(currentStep)}
+        </div>
       </div>
-      {showSteps(2)}
-    </div>
   );
 }
 
