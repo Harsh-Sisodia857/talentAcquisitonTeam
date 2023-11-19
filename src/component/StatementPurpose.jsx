@@ -1,4 +1,4 @@
-import React,{useContext,useState} from 'react'
+import React,{useContext,useState,useEffect} from 'react'
 import { Button } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
@@ -7,8 +7,17 @@ import InputLabel from "@mui/material/InputLabel";
 
 
 function StatementPurpose() {
-    const { setcurrentStep,userData,setuserData } = useContext(formContext);
+  const { setcurrentStep, userData, setuserData } = useContext(formContext);
+    const [areQuestionsComplete, setQuestionsComplete] = useState(false);
 
+    useEffect(() => {
+      // Check if all answer fields are filled
+      const areAllQuestionsFilled =
+        userData["questionA"] && userData["questionB"] && userData["questionC"];
+
+      // Update the completion status
+      setQuestionsComplete(areAllQuestionsFilled);
+    }, [userData]);
     const handleAnswerChange = (event, question) => {
       setuserData({
         ...userData,
@@ -78,6 +87,7 @@ function StatementPurpose() {
           variant="contained"
           onClick={() => setcurrentStep(4)}
           color="primary"
+          disabled={!areQuestionsComplete}
         >
           Next
         </Button>

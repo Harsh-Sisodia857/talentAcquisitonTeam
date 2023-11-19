@@ -1,4 +1,4 @@
-import React, { useState,useContext } from "react";
+import React, { useState,useContext,useEffect } from "react";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import Grid from "@mui/material/Grid";
@@ -7,6 +7,7 @@ import formContext from "../Context/FormContext";
 
 function InterviewAbilitySection() {
   const { submitData, setcurrentStep, setuserData, userData } = useContext(formContext);
+  const [isFormComplete, setFormComplete] = useState(false);
 
   const handleChange = (event) => {
     setuserData({
@@ -15,27 +16,28 @@ function InterviewAbilitySection() {
     });
   };
 
+   useEffect(() => {
+     // Check if all fields are filled
+     const areAllFieldsFilled =
+       userData.location &&
+       userData.interviewDate &&
+       userData.interviewTime &&
+       userData.timeZone &&
+       userData.interviewMedium;
+
+     // Update the completion status
+     setFormComplete(areAllFieldsFilled);
+   }, [userData]);
+
   return (
     <div className="my-10">
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <TextField
-            label="Email"
-            fullWidth
-            required
-            type="email"
-            name="email"
-            value={userData["Email"]}
-            onChange={handleChange}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
             label="Location"
             fullWidth
-            required
             name="location"
-            value={userData["Location"]}
+            value={userData["location"]}
             onChange={handleChange}
           />
         </Grid>
@@ -43,7 +45,6 @@ function InterviewAbilitySection() {
           <TextField
             label="Interview Date"
             fullWidth
-            required
             type="date"
             name="interviewDate"
             value={userData["interviewDate"]}
@@ -54,7 +55,6 @@ function InterviewAbilitySection() {
           <TextField
             label="Interview Time"
             fullWidth
-            required
             type="time"
             name="interviewTime"
             value={userData["interviewTime"]}
@@ -66,7 +66,6 @@ function InterviewAbilitySection() {
             select
             label="Time Zone"
             fullWidth
-            required
             name="timeZone"
             value={userData["timeZone"] || ""}
             onChange={handleChange}
@@ -81,7 +80,6 @@ function InterviewAbilitySection() {
             select
             label="Interview Medium"
             fullWidth
-            required
             name="interviewMedium"
             value={userData["interviewMedium"] || ""}
             onChange={handleChange}
@@ -101,7 +99,12 @@ function InterviewAbilitySection() {
         >
           Prev
         </Button>
-        <Button variant="contained" onClick={submitData} color="primary">
+        <Button
+          variant="contained"
+          onClick={submitData}
+          disabled={!isFormComplete}
+          color="primary"
+        >
           Submit
         </Button>
       </div>

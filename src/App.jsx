@@ -26,6 +26,7 @@ function App() {
     }
   }
   return (
+    <div className="app-header">
       <div className="flex justify-center items-center">
         <div className="w-[50%]">
           <div className="center-stepper">
@@ -47,6 +48,7 @@ function App() {
           {showSteps(currentStep)}
         </div>
       </div>
+    </div>
   );
 }
 

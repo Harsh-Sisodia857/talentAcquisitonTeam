@@ -12,16 +12,23 @@ function FormState(props) {
 
   const submitData = async () => {
     console.log(userData);
-    setfinalData(finalData => [...finalData, userData]);
+
     try {
-      const response = await axios.post('http://localhost:3000/submitForm', finalData);
+      const response = await axios.post(
+        "http://localhost:4000/submitForm",
+        userData
+      );
+
+
       console.log(response.data);
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error("Error submitting form:", error);
     }
-    setuserData([])
+
+    setuserData([]);
     setcurrentStep(1);
-  }
+  };
+
     return (
       <div>
         <formContext.Provider

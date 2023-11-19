@@ -1,5 +1,5 @@
-// import "../App.css";
-import React, { useContext, useState } from 'react';
+import "../App.css";
+import React, { useContext, useState,useEffect } from 'react';
 import formContext from '../Context/FormContext';
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
@@ -10,6 +10,8 @@ import axios from "axios";
 
 function DocumentSection() {
   const { setcurrentStep, setuserData, userData } = useContext(formContext);
+   const [formComplete, setFormComplete] = useState(false);
+
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
     clipPath: "inset(50%)",
@@ -23,41 +25,77 @@ function DocumentSection() {
   });
 
   const [formValues, setFormValues] = useState({
-    class10Marksheet: null,
-    class12Marksheet: null,
-    graduationMarksheet: null,
-    postGraduationMarksheet: null,
-    resumeCV: null,
-    recommendationLetter: null,
-    salarySlips: null,
-    others: null,
+    class10Marksheet: "",
+    class12Marksheet: "",
+    graduationMarksheet: "",
+    postGraduationMarksheet: "",
+    resumeCV: "",
+    recommendationLetter: "",
+    salarySlip: "",
+    others: "",
   });
 
 
-  const handleFileChange = (event, fieldName) => {
-    console.log("Handle file change called ")
+  const handleFileChange = async (event, fieldName) => {
+    console.log("Handle file change called ");
     const file = event.target.files[0];
     console.log("FILE : ", file);
+
+    // Update formValues
     setFormValues({
       ...formValues,
-      [fieldName]: file,
+      [fieldName]: file.name // Store the file name or null
     });
-    setuserData([...userData,{"documents" : formValues}]);
-    console.log("Form Value : ",formValues)
+
+    console.log(formValues)
+    // Update userData
+   
+    const formData = new FormData();
+    formData.append("file", file);
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/upload",
+        formData
+      );
+
+      setuserData({
+        ...userData,
+        documents: {
+          ...userData.documents,
+          [fieldName]: response.data.fileLocation,
+        },
+      });
+    } catch (error) {
+      console.error("Error uploading file:", error);
+    }
+
+    console.log(userData)
   };
 
-  const handleUpload = (fieldName) => {
-       console.log(fieldName)
-       const formData = new FormData();
-       formData.append("file", formValues[fieldName]);
-       console.log(formData)
-     };
+   useEffect(() => {
+     // Check if all fields are filled
+     const isFormComplete =
+       formValues.class10Marksheet !== "" &&
+       formValues.class12Marksheet !== "" &&
+       formValues.graduationMarksheet !== "" &&
+       formValues.postGraduationMarksheet !== "" &&
+       formValues.resumeCV !== "" &&
+       formValues.recommendationLetter !== "" &&
+       formValues.salarySlips !== "" &&
+       formValues.others !== "";
 
+
+     // Update the completion status
+     setFormComplete(isFormComplete);
+     console.log(formValues)
+      console.log("Form Complete:", isFormComplete);
+
+   }, [formValues]);
   
   return (
     <div className="my-[50px]">
-      <Grid container spacing={5}>
-        <Grid item xs={6}>
+      <Grid container spacing={3}>
+        <Grid item xs={5}>
           <h3 className="my-5">Class 10 Marksheet</h3>
         </Grid>
 
@@ -67,7 +105,7 @@ function DocumentSection() {
             variant="contained"
             startIcon={<CloudUploadIcon />}
             className="uploadFile"
-            onClick={() => handleUpload("class10Marksheet")}
+            // onClick={() => handleUpload("class10Marksheet")}
           >
             Upload file
             <VisuallyHiddenInput
@@ -75,10 +113,16 @@ function DocumentSection() {
               onChange={(e) => handleFileChange(e, "class10Marksheet")}
             />
           </Button>
-          <div>{userData["class10Marksheet"]}</div>
+        </Grid>
+        <Grid item xs={1} className="file-upload">
+          <div className="flex justify-center items-center">
+            {formValues && formValues["class10Marksheet"] !== ""
+              ? formValues["class10Marksheet"]
+              : ""}
+          </div>
         </Grid>
 
-        <Grid item xs={6}>
+        <Grid item xs={5}>
           <h3 className="my-5">Class 12 Marksheet</h3>
         </Grid>
         <Grid item xs={6}>
@@ -87,7 +131,7 @@ function DocumentSection() {
             variant="contained"
             startIcon={<CloudUploadIcon />}
             className="uploadFile"
-            onClick={() => handleUpload("class12Marksheet")}
+            // onClick={() => handleUpload("class12Marksheet")}
           >
             Upload file
             <VisuallyHiddenInput
@@ -96,8 +140,14 @@ function DocumentSection() {
             />
           </Button>
         </Grid>
-
-        <Grid item xs={6}>
+        <Grid item xs={1} className="file-upload">
+          <div className="flex justify-center items-center">
+            {formValues && formValues["class12Marksheet"] !== ""
+              ? formValues["class12Marksheet"]
+              : ""}
+          </div>
+        </Grid>
+        <Grid item xs={5}>
           <h3 className="my-5">Graduation Marksheet</h3>
         </Grid>
         <Grid item xs={6}>
@@ -106,7 +156,7 @@ function DocumentSection() {
             variant="contained"
             startIcon={<CloudUploadIcon />}
             className="uploadFile"
-            onClick={() => handleUpload("graduationMarksheet")}
+            // onClick={() => handleUpload("graduationMarksheet")}
           >
             Upload file
             <VisuallyHiddenInput
@@ -115,8 +165,14 @@ function DocumentSection() {
             />
           </Button>
         </Grid>
-
-        <Grid item xs={6}>
+        <Grid item xs={1} className="file-upload">
+          <div className="flex justify-center items-center">
+            {formValues && formValues["graduationMarksheet"] !== ""
+              ? formValues["graduationMarksheet"]
+              : ""}
+          </div>
+        </Grid>
+        <Grid item xs={5}>
           <h3 className="my-5">Post Graduation Marksheet</h3>
         </Grid>
         <Grid item xs={6}>
@@ -125,7 +181,7 @@ function DocumentSection() {
             variant="contained"
             startIcon={<CloudUploadIcon />}
             className="uploadFile"
-            onClick={() => handleUpload("postGraduationMarksheet")}
+            // onClick={() => handleUpload("postGraduationMarksheet")}
           >
             Upload file
             <VisuallyHiddenInput
@@ -134,8 +190,14 @@ function DocumentSection() {
             />
           </Button>
         </Grid>
-
-        <Grid item xs={6}>
+        <Grid item xs={1} className="file-upload">
+          <div className="flex justify-center items-center">
+            {formValues && formValues["postGraduationMarksheet"] !== ""
+              ? formValues["postGraduationMarksheet"]
+              : ""}
+          </div>
+        </Grid>
+        <Grid item xs={5}>
           <h3 className="my-5">Resume/CV</h3>
         </Grid>
 
@@ -145,7 +207,7 @@ function DocumentSection() {
             variant="contained"
             startIcon={<CloudUploadIcon />}
             className="uploadFile"
-            onClick={() => handleUpload("resumeCV")}
+            // onClick={() => handleUpload("resumeCV")}
           >
             Upload file
             <VisuallyHiddenInput
@@ -154,8 +216,14 @@ function DocumentSection() {
             />
           </Button>
         </Grid>
-
-        <Grid item xs={6}>
+        <Grid item xs={1} className="file-upload">
+          <div className="flex justify-center items-center">
+            {formValues && formValues["resumeCV"] !== ""
+              ? formValues["resumeCV"]
+              : ""}
+          </div>
+        </Grid>
+        <Grid item xs={5}>
           <h3 className="my-5">Recommendation Letter</h3>
         </Grid>
 
@@ -165,7 +233,7 @@ function DocumentSection() {
             variant="contained"
             startIcon={<CloudUploadIcon />}
             className="uploadFile"
-            onClick={() => handleUpload("recommendationLetter")}
+            // onClick={() => handleUpload("recommendationLetter")}
           >
             Upload file
             <VisuallyHiddenInput
@@ -174,8 +242,14 @@ function DocumentSection() {
             />
           </Button>
         </Grid>
-
-        <Grid item xs={6}>
+        <Grid item xs={1} className="file-upload">
+          <div className="flex justify-center items-center">
+            {formValues && formValues["recommendationLetter"] !== ""
+              ? formValues["recommendationLetter"]
+              : ""}
+          </div>
+        </Grid>
+        <Grid item xs={5}>
           <h3 className="my-5">Salary Slip</h3>
         </Grid>
 
@@ -185,7 +259,7 @@ function DocumentSection() {
             variant="contained"
             startIcon={<CloudUploadIcon />}
             className="uploadFile"
-            onClick={() => handleUpload("salarySlip")}
+            // onClick={() => handleUpload("salarySlip")}
           >
             Upload file
             <VisuallyHiddenInput
@@ -194,8 +268,14 @@ function DocumentSection() {
             />
           </Button>
         </Grid>
-
-        <Grid item xs={6}>
+        <Grid item xs={1} className="file-upload">
+          <div className="flex justify-center items-center">
+            {formValues && formValues["salarySlip"] !== ""
+              ? formValues["salarySlip"]
+              : ""}
+          </div>
+        </Grid>
+        <Grid item xs={5}>
           <h3 className="my-5">Additional Document</h3>
         </Grid>
 
@@ -205,7 +285,7 @@ function DocumentSection() {
             variant="contained"
             startIcon={<CloudUploadIcon />}
             className="uploadFile"
-            onClick={() => handleUpload("others")}
+            // onClick={() => handleUpload("others")}
           >
             Upload file
             <VisuallyHiddenInput
@@ -214,8 +294,14 @@ function DocumentSection() {
             />
           </Button>
         </Grid>
-
-        <Grid item xs={12}>
+        <Grid item xs={1} className="file-upload">
+          <div className="flex justify-center items-center">
+            {formValues && formValues["others"] !== ""
+              ? formValues["others"]
+              : ""}
+          </div>
+        </Grid>
+        <Grid item xs={12} className="my-5">
           <Button
             variant="contained"
             onClick={() => setcurrentStep(1)}
@@ -228,6 +314,7 @@ function DocumentSection() {
             variant="contained"
             onClick={() => setcurrentStep(3)}
             color="primary"
+            // disabled={!formComplete}
           >
             Next
           </Button>
