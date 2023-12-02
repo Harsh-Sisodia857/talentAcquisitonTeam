@@ -30,7 +30,7 @@ function App() {
       <div className="flex justify-center items-center bg-gray-200">
         <div>
           <div
-            className="center-stepper border-b-4 border-indigo-500"
+            className="center-stepper border-bottom-shadow"
             style={{
               width: "100%",
               margin: "0px auto",
