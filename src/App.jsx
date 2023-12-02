@@ -27,25 +27,36 @@ function App() {
   }
   return (
     <div className="app-header">
-      <div className="flex justify-center items-center">
-        <div className="w-[50%]">
-          <div className="center-stepper">
-            <Stepper activeStep={currentStep - 1} orientation={"horizontal"}>
+      <div className="flex justify-center items-center bg-gray-200">
+        <div>
+          <div
+            className="center-stepper border-b-4 border-indigo-500"
+            style={{
+              width: "100%",
+              margin: "0px auto",
+              padding: "24px 0px",
+            }}
+          >
+            <Stepper
+              activeStep={currentStep - 1}
+              orientation={"horizontal"}
+              style={{ width: "50%", margin: "auto" }}
+            >
               <Step>
-                <StepLabel></StepLabel>
+                <StepLabel>Form Selection</StepLabel>
               </Step>
               <Step>
-                <StepLabel></StepLabel>
+                <StepLabel>Set Up</StepLabel>
               </Step>
               <Step>
-                <StepLabel></StepLabel>
+                <StepLabel>Form Creation</StepLabel>
               </Step>
               <Step>
-                <StepLabel></StepLabel>
+                <StepLabel>Review</StepLabel>
               </Step>
             </Stepper>
           </div>
-          {showSteps(currentStep)}
+          <div className="bg-gray-200 h-[200%]">{showSteps(currentStep)}</div>
         </div>
       </div>
     </div>

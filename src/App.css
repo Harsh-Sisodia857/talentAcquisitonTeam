@@ -1,14 +1,3 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-*{
-  font-weight: bold !important;
-}
-
 .btn-prev{
     margin: 0 20px !important;
 }
@@ -27,7 +16,7 @@ body{
   height: 100%;
 }
 
-.app-header::before{
+/* .app-header::before{
     content: '';
     background: url('./assets/interview.jpg') no-repeat center center/cover;
     position:absolute;
@@ -37,7 +26,7 @@ body{
     width: 100vw; 
     height: 170%; 
     z-index: -1;
-}
+} */
 
 .file-upload{
   display : block !important;
